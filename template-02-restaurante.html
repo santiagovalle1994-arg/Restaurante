@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terra — Cocina de Autor</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --warm-white: #faf8f4;
+    --terracotta: #c8603a;
+    --dark-terracotta: #a34a28;
+    --sage: #7a8c6e;
+    --dark-brown: #2c1a0e;
+    --text: #3d2b1a;
+    --text-light: #8c7060;
+    --border: rgba(44,26,14,0.1);
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--warm-white); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.5rem 5%;
+    background: rgba(250,248,244,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: padding 0.3s;
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-weight: 600; letter-spacing: 0.05em;
+    color: var(--dark-brown); text-decoration: none;
+  }
+  .logo span { color: var(--terracotta); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+  .nav-links a { color: var(--text-light); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.08em; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--terracotta); }
+  .nav-reserve {
+    background: var(--terracotta); color: white !important;
+    padding: 0.7rem 1.8rem; font-size: 0.8rem !important;
+    letter-spacing: 0.1em; transition: background 0.3s !important;
+  }
+  .nav-reserve:hover { background: var(--dark-terracotta) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+  }
+  .hero-left {
+    background: var(--dark-brown);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 6rem 5% 6rem 7%;
+    position: relative; overflow: hidden;
+  }
+  .hero-left::before {
+    content: '';
+    position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 60% 60%, rgba(200,96,58,0.15), transparent 60%);
+  }
+  .hero-tag-left {
+    font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--terracotta); margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-tag-left::before { content: ''; width: 30px; height: 1px; background: var(--terracotta); }
+  .hero-h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 5.5vw, 5.5rem);
+    font-weight: 300; line-height: 1.05;
+    color: var(--cream); margin-bottom: 2rem;
+  }
+  .hero-h1 em { font-style: italic; color: var(--terracotta); }
+  .hero-desc-left {
+    color: rgba(245,240,232,0.55); font-size: 0.95rem;
+    line-height: 1.9; max-width: 380px; margin-bottom: 3rem;
+  }
+  .btn-hero {
+    display: inline-flex; align-items: center; gap: 1rem;
+    background: var(--terracotta); color: white;
+    padding: 1.1rem 2.5rem; text-decoration: none;
+    font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif; font-weight: 400;
+    transition: background 0.3s, transform 0.2s;
+    width: fit-content;
+  }
+  .btn-hero:hover { background: var(--dark-terracotta); transform: translateY(-2px); }
+  .hero-right {
+    background: var(--cream);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative; overflow: hidden;
+    min-height: 100%;
+  }
+  .hero-image-area {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to bottom, transparent 50%, var(--cream) 95%),
+      linear-gradient(135deg, #d4b896 0%, #c4a882 50%, #b8956e 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .food-placeholder {
+    width: 200px; height: 200px; border-radius: 50%;
+    background: rgba(200,96,58,0.1);
+    border: 2px dashed rgba(200,96,58,0.3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--terracotta); font-size: 0.7rem;
+    letter-spacing: 0.2em; text-align: center;
+  }
+  .hero-right-content {
+    position: relative; z-index: 1; padding: 3rem;
+  }
+  .opening-hours {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  }
+  .hour-item { border-left: 2px solid var(--terracotta); padding-left: 1rem; }
+  .hour-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.3rem; }
+  .hour-value { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--dark-brown); }
+
+  /* BAND */
+  .band {
+    background: var(--terracotta); color: white;
+    padding: 1.5rem 5%;
+    display: flex; justify-content: space-around; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .band-item { display: flex; align-items: center; gap: 0.8rem; font-size: 0.8rem; letter-spacing: 0.1em; }
+  .band-item span { font-size: 1.2rem; }
+
+  /* MENU PREVIEW */
+  .menu-section { padding: 8rem 5%; }
+  .section-eyebrow {
+    display: flex; align-items: center; gap: 1rem;
+    font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--terracotta); margin-bottom: 1.5rem;
+  }
+  .section-eyebrow::before { content: ''; width: 30px; height: 1px; background: var(--terracotta); }
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4.5vw, 4rem);
+    font-weight: 300; line-height: 1.1;
+    color: var(--dark-brown); margin-bottom: 4rem;
+  }
+  h2 em { font-style: italic; color: var(--terracotta); }
+  .menu-header { display: flex; justify-content: space-between; align-items: flex-end; }
+  .menu-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+  .tab {
+    padding: 0.8rem 2rem; cursor: pointer;
+    font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-light); border-bottom: 2px solid transparent;
+    transition: color 0.3s, border-color 0.3s; margin-bottom: -1px;
+  }
+  .tab.active { color: var(--terracotta); border-color: var(--terracotta); }
+  .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+  .menu-item {
+    background: var(--warm-white); padding: 2rem;
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    transition: background 0.3s;
+  }
+  .menu-item:hover { background: var(--cream); }
+  .menu-item-img {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--cream), #d4b896);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+  }
+  .menu-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; font-weight: 600; color: var(--dark-brown);
+    margin-bottom: 0.3rem;
+  }
+  .menu-item-desc { font-size: 0.82rem; color: var(--text-light); line-height: 1.6; margin-bottom: 0.8rem; }
+  .menu-item-price { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--terracotta); font-weight: 600; }
+
+  /* ABOUT */
+  .about {
+    display: grid; grid-template-columns: 1fr 1fr;
+    background: var(--cream); overflow: hidden;
+  }
+  .about-image {
+    background: linear-gradient(to right, #c4a882, #b8956e);
+    min-height: 500px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(44,26,14,0.3); font-size: 0.7rem; letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  .about-content { padding: 6rem 5%; display: flex; flex-direction: column; justify-content: center; }
+  .about-text { font-size: 1rem; color: var(--text-light); line-height: 1.9; margin-top: 1.5rem; }
+  .chef-sig { margin-top: 2.5rem; display: flex; align-items: center; gap: 1.5rem; }
+  .chef-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--terracotta), var(--dark-terracotta)); }
+  .chef-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: var(--dark-brown); }
+  .chef-role { font-size: 0.75rem; color: var(--text-light); letter-spacing: 0.1em; }
+
+  /* RESERVATION */
+  .reservation { padding: 8rem 5%; background: var(--dark-brown); color: var(--cream); text-align: center; }
+  .reservation h2 { color: var(--cream); margin-bottom: 1rem; }
+  .reservation p { color: rgba(245,240,232,0.55); font-size: 0.95rem; max-width: 500px; margin: 0 auto 3rem; line-height: 1.8; }
+  .res-form { display: flex; gap: 0; max-width: 700px; margin: 0 auto; flex-wrap: wrap; }
+  .res-form input, .res-form select {
+    flex: 1; min-width: 150px; padding: 1.1rem 1.5rem;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-right: none; color: var(--cream);
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    outline: none; transition: background 0.3s;
+  }
+  .res-form input:focus, .res-form select:focus { background: rgba(255,255,255,0.12); }
+  .res-form input::placeholder { color: rgba(245,240,232,0.4); }
+  .res-form select option { background: var(--dark-brown); }
+  .res-form .btn-res {
+    background: var(--terracotta); color: white;
+    border: none; padding: 1.1rem 2rem; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    transition: background 0.3s; white-space: nowrap;
+  }
+  .res-form .btn-res:hover { background: var(--dark-terracotta); }
+
+  /* GALLERY */
+  .gallery { padding: 6rem 5%; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 200px);
+    gap: 8px; margin-top: 3rem;
+  }
+  .gal-item {
+    background: linear-gradient(135deg, #c4a882, #b8956e);
+    overflow: hidden; position: relative;
+    transition: opacity 0.3s;
+  }
+  .gal-item:hover { opacity: 0.85; }
+  .gal-item:first-child { grid-column: span 2; grid-row: span 2; }
+  .gal-item:nth-child(2) { background: linear-gradient(135deg, #8c6040, #7a4c28); }
+  .gal-item:nth-child(3) { background: linear-gradient(135deg, #7a8c6e, #5c6e52); }
+  .gal-item:nth-child(4) { background: linear-gradient(135deg, #c8603a, #a34a28); }
+  .gal-item:nth-child(5) { background: linear-gradient(135deg, #3d2b1a, #2c1a0e); }
+  .gal-label {
+    position: absolute; bottom: 1rem; left: 1rem;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* FOOTER */
+  footer { background: var(--dark-brown); color: var(--cream); padding: 4rem 5% 2rem; }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem; padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; margin-bottom: 1rem; }
+  .footer-logo span { color: var(--terracotta); }
+  .footer-tagline { color: rgba(245,240,232,0.4); font-size: 0.85rem; line-height: 1.7; }
+  .footer-col h4 { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-light); margin-bottom: 1.5rem; }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 0.8rem; }
+  .footer-col a { color: rgba(245,240,232,0.55); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+  .footer-col a:hover { color: var(--terracotta); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; color: rgba(245,240,232,0.3); font-size: 0.75rem; }
+
+  .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s, transform 0.8s; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">Terra<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#reservas" class="nav-reserve">Reservar Mesa</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag-left">Cocina de Autor · Mar del Plata</div>
+    <h1 class="hero-h1">Sabores que<br>cuentan una<br><em>historia.</em></h1>
+    <p class="hero-desc-left">Ingredientes locales, técnicas de autor y pasión en cada plato. Una experiencia gastronómica que despierta todos los sentidos.</p>
+    <a href="#reservas" class="btn-hero">Reservar Mesa →</a>
+  </div>
+  <div class="hero-right">
+    <div class="hero-image-area">
+      <div class="food-placeholder">[ Imagen<br>del Plato ]</div>
+    </div>
+    <div class="hero-right-content">
+      <div class="opening-hours">
+        <div class="hour-item">
+          <div class="hour-label">Mar — Vie</div>
+          <div class="hour-value">19:30 – 23:30</div>
+        </div>
+        <div class="hour-item">
+          <div class="hour-label">Sáb — Dom</div>
+          <div class="hour-value">12:00 – 00:00</div>
+        </div>
+        <div class="hour-item">
+          <div class="hour-label">Reservas</div>
+          <div class="hour-value">Recomendadas</div>
+        </div>
+        <div class="hour-item">
+          <div class="hour-label">Capacidad</div>
+          <div class="hour-value">40 cubiertos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BAND -->
+<div class="band">
+  <div class="band-item"><span>🌿</span> Ingredientes Locales</div>
+  <div class="band-item"><span>🍷</span> Sommelier en Sala</div>
+  <div class="band-item"><span>🏆</span> Premiado 2024</div>
+  <div class="band-item"><span>🌱</span> Menú de Temporada</div>
+  <div class="band-item"><span>♿</span> Accesible</div>
+</div>
+
+<!-- MENU -->
+<section class="menu-section" id="menu">
+  <div class="menu-header fade-in">
+    <div>
+      <div class="section-eyebrow">Propuesta Gastronómica</div>
+      <h2>Nuestro <em>menú</em></h2>
+    </div>
+    <a href="#" style="color:var(--terracotta);text-decoration:none;font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase">Ver Menú Completo →</a>
+  </div>
+  <div class="menu-tabs">
+    <div class="tab active" onclick="setTab(this)">Entradas</div>
+    <div class="tab" onclick="setTab(this)">Principales</div>
+    <div class="tab" onclick="setTab(this)">Postres</div>
+    <div class="tab" onclick="setTab(this)">Bebidas</div>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-item fade-in">
+      <div class="menu-item-img">🥗</div>
+      <div>
+        <div class="menu-item-name">Burrata con Tomates Asados</div>
+        <div class="menu-item-desc">Burrata fresca, tomates cherry asados con albahaca, reducción de balsámico y aceite de oliva extra virgen.</div>
+        <div class="menu-item-price">$2.400</div>
+      </div>
+    </div>
+    <div class="menu-item fade-in">
+      <div class="menu-item-img">🦑</div>
+      <div>
+        <div class="menu-item-name">Calamar a la Plancha</div>
+        <div class="menu-item-desc">Calamar fresco del día, limón quemado, ajo negro y salsa verde con hierbas de temporada.</div>
+        <div class="menu-item-price">$2.900</div>
+      </div>
+    </div>
+    <div class="menu-item fade-in">
+      <div class="menu-item-img">🥩</div>
+      <div>
+        <div class="menu-item-name">Entraña Angus con Polenta</div>
+        <div class="menu-item-desc">Entraña premium, polenta cremosa con parmesano, chimichurri de autor y vegetales grillados.</div>
+        <div class="menu-item-price">$4.800</div>
+      </div>
+    </div>
+    <div class="menu-item fade-in">
+      <div class="menu-item-img">🐟</div>
+      <div>
+        <div class="menu-item-name">Merluza Negra con Risotto</div>
+        <div class="menu-item-desc">Merluza negra confitada, risotto de limón y azafrán, aceite de trufa y ciboulette fresca.</div>
+        <div class="menu-item-price">$5.200</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="nosotros">
+  <div class="about-image">[ Foto Chef / Cocina ]</div>
+  <div class="about-content fade-in">
+    <div class="section-eyebrow">Nuestra Historia</div>
+    <h2>Pasión por la <em>cocina honesta</em></h2>
+    <p class="about-text">Terra nació de una convicción: la mejor cocina es la que celebra el producto local. Trabajamos con productores de la región bonaerense, privilegiando la calidad sobre la cantidad y el sabor sobre la apariencia.</p>
+    <p class="about-text" style="margin-top:1rem">Cada plato es una conversación entre tradición e innovación, donde el fuego, la tierra y el mar se encuentran en el plato.</p>
+    <div class="chef-sig">
+      <div class="chef-avatar"></div>
+      <div>
+        <div class="chef-name">Chef Martina Solano</div>
+        <div class="chef-role">Fundadora & Chef Ejecutiva</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section class="reservation" id="reservas">
+  <div class="section-eyebrow" style="justify-content:center;color:var(--terracotta)">Reservas Online</div>
+  <h2>Reservá tu mesa</h2>
+  <p>Elegí tu fecha y nos aseguramos de que tu experiencia sea perfecta desde el primer momento.</p>
+  <div class="res-form">
+    <input type="date" placeholder="Fecha">
+    <select>
+      <option>Personas</option>
+      <option>1 persona</option>
+      <option>2 personas</option>
+      <option>3-4 personas</option>
+      <option>5-6 personas</option>
+      <option>+6 personas</option>
+    </select>
+    <select>
+      <option>Horario</option>
+      <option>19:30</option>
+      <option>20:00</option>
+      <option>20:30</option>
+      <option>21:00</option>
+      <option>21:30</option>
+    </select>
+    <button class="btn-res">Confirmar</button>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="galeria">
+  <div class="fade-in">
+    <div class="section-eyebrow">Galería</div>
+    <h2>La <em>experiencia</em> Terra</h2>
+  </div>
+  <div class="gallery-grid">
+    <div class="gal-item"><div class="gal-label">Ambientación</div></div>
+    <div class="gal-item"><div class="gal-label">Cocina Abierta</div></div>
+    <div class="gal-item"><div class="gal-label">Carta de Vinos</div></div>
+    <div class="gal-item"><div class="gal-label">Platos</div></div>
+    <div class="gal-item"><div class="gal-label">Terraza</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">Terra<span>.</span></div>
+      <div class="footer-tagline">Cocina de autor en el corazón de Mar del Plata. Una mesa para recordar.</div>
+    </div>
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href="#menu">Menú</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#galeria">Galería</a></li>
+        <li><a href="#reservas">Reservas</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="#">San Martín 2540, MdP</a></li>
+        <li><a href="#">+54 223 000-0000</a></li>
+        <li><a href="#">hola@terra-mdp.com</a></li>
+        <li><a href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Terra Restaurante. Todos los derechos reservados.</span>
+    <span>Diseñado con ♡ en Mar del Plata</span>
+  </div>
+</footer>
+
+<script>
+  function setTab(el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => { if(e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i*120); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
